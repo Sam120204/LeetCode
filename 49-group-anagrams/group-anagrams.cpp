@@ -1,26 +1,17 @@
 class Solution {
 public:
     vector<vector<string>> groupAnagrams(vector<string>& strs) {
-        vector<string> v;
-        for (auto& i : strs) {
-            string cpy = i;
-            sort(cpy.begin(), cpy.end());
-            v.emplace_back(cpy);
+        unordered_map<string, vector<string>> map; // Map sorted string to vector of anagrams
+        for (auto& str : strs) {
+            string sortedStr = str; // Copy the original string
+            sort(sortedStr.begin(), sortedStr.end()); // Sort the copy
+            map[sortedStr].push_back(str); // Group anagrams together in the map
         }
-        unordered_map<string, vector<int>> map;
-        for (int i = 0; i < v.size(); i++) {
-            if (map.count(v[i])) map[v[i]].emplace_back(i);
-            else map[v[i]] = {i};
-        }
+        
         vector<vector<string>> res;
-        for (auto& pair:map) {
-            vector<string> temp;
-            for (auto& i : pair.second) {
-                temp.emplace_back(strs[i]);
-            }
-            res.emplace_back(temp);
+        for (auto& pair : map) {
+            res.push_back(pair.second); // Each value in map is already a vector of grouped anagrams
         }
         return res;
-
     }
 };
