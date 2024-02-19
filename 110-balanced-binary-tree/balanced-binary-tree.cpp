@@ -26,8 +26,6 @@ public:
         if (root->right) right = 1 + get_height(root->right, if_balanced);
         
         if (abs(right - left) > 1) {
-            cout << left << endl;
-            cout <<right << endl;
             if_balanced = false;
         }
         return max(left, right);
