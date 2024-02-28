@@ -14,16 +14,15 @@ public:
     int goodNodes(TreeNode* root) {
         if (!root) return 0;
         vector<TreeNode*> path = {nullptr};
-        vector<int> goodNode = {};
+        int goodNode = 0;
         if_max(root, path, goodNode);
         
-        return goodNode.size();
+        return goodNode;
     }
 
-    void if_max(TreeNode* root, vector<TreeNode*> path, vector<int> &goodNode) {
+    void if_max(TreeNode* root, vector<TreeNode*> path, int& goodNode) {
         if (!root) return;
         bool if_good = true;
-        //if (path.empty()) { goodNode.emplace_back(root->val); }
 
         for (const auto& node:path) {
             if (node and node->val > root->val) {
@@ -31,17 +30,9 @@ public:
                 break;
             }
         }
-        
-        
-        if (if_good) { goodNode.emplace_back(root->val); }
-        if (root->left) {
-            path.emplace_back(root);
-            if_max(root->left, path, goodNode);
-        }
-        if (root->right) {
-            path.emplace_back(root);
-            if_max(root->right, path, goodNode);
-        }
-        
-    }
+        if (if_good) { goodNode++; }
+        path.emplace_back(root);
+        if_max(root->left, path, goodNode);
+        if_max(root->right, path, goodNode);
+    }   
 };
