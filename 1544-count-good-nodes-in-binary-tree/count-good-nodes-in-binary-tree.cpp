@@ -13,26 +13,20 @@ class Solution {
 public:
     int goodNodes(TreeNode* root) {
         if (!root) return 0;
-        vector<TreeNode*> path = {nullptr};
+        int max_so_far = root->val;
         int goodNode = 0;
-        if_max(root, path, goodNode);
+        if_max(root, max_so_far, goodNode);
         
         return goodNode;
     }
 
-    void if_max(TreeNode* root, vector<TreeNode*> path, int& goodNode) {
+    void if_max(TreeNode* root, int max_so_far, int& goodNode) {
         if (!root) return;
         bool if_good = true;
+        
+        if (root->val >= max_so_far) { goodNode++; }
 
-        for (const auto& node:path) {
-            if (node and node->val > root->val) {
-                if_good = false;
-                break;
-            }
-        }
-        if (if_good) { goodNode++; }
-        path.emplace_back(root);
-        if_max(root->left, path, goodNode);
-        if_max(root->right, path, goodNode);
+        if_max(root->left, max(max_so_far, root->val), goodNode);
+        if_max(root->right, max(max_so_far, root->val), goodNode);
     }   
 };
