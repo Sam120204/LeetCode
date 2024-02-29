@@ -5,13 +5,6 @@ public:
     MinStack() {}
     
     void push(int val) {
-        // if (s.empty()) {
-        //     s.push(val);
-            
-        // } else {
-        //     minn = min(minn, val);
-        //     s.push(val);
-        // }
         s.push(val);
         if (s2.empty() || val <= s2.top()) {
             s2.push(val);
