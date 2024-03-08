@@ -18,7 +18,7 @@ public:
         } else if (!list1) {
             return list2;
         } else if (!list2) { return list1; }
-        ListNode* res = new ListNode(0);
+        ListNode* res = new  ListNode(0);
         ListNode* cur = res;
 
         while (head1 and head2) {
@@ -27,7 +27,7 @@ public:
                 cur = cur->next;
                 head1 = head1->next;
   
-            } else {
+            } else if (head1->val > head2->val) {
                 cur->next = head2;
                 cur = cur->next;
                 head2 = head2->next;
