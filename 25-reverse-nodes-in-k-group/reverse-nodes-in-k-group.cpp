@@ -1,46 +1,53 @@
-/**
- * Definition for singly-linked list.
- * struct ListNode {
- *     int val;
- *     ListNode *next;
- *     ListNode() : val(0), next(nullptr) {}
- *     ListNode(int x) : val(x), next(nullptr) {}
- *     ListNode(int x, ListNode *next) : val(x), next(next) {}
- * };
- */
+
 class Solution {
 public:
     ListNode* reverseKGroup(ListNode* head, int k) {
-    if (head == nullptr || k == 1) return head;
+        if (!head || k == 1) return head;
 
-    ListNode dummy(0);
-    ListNode* cur = &dummy;
-    while (head != nullptr) {
-        // Stack to store k nodes
-        stack<ListNode*> stk;
+        ListNode dummy(0);
+        dummy.next = head;
+        ListNode* cur = &dummy;
+        
+        int count = 0;
         ListNode* temp = head;
-        // Push up to k nodes onto the stack
-        for (int i = 0; i < k && temp != nullptr; i++) {
-            stk.push(temp);
+        while (temp) {
             temp = temp->next;
+            count++;
         }
 
-        // Only reverse if we have k nodes
-        if (stk.size() == k) {
-            while (!stk.empty()) {
-                cur->next = stk.top();
-                stk.pop();
-                cur = cur->next;
-            }
-            cur->next = temp; // Important to link the current list with the remaining part
-            head = temp; // Move head to the start of the next group of nodes
-        } else {
-            // If we have less than k nodes, just link them directly without reversing
-            cur->next = head;
-            break; // Exit the loop as this is the last group
+        while (count >= k) {
+            cur = reverseNextKNodesDeque(cur, k);
+            count -= k;
         }
+
+        return dummy.next;
     }
-    return dummy.next;
-}
 
+private:
+    // Helper function to reverse the next k nodes in the list using a deque
+    // Returns the new 'cur' pointer, pointing to the last node of the reversed group
+    ListNode* reverseNextKNodesDeque(ListNode* cur, int k) {
+        std::deque<ListNode*> dq;
+        
+        ListNode* node = cur->next; // The first node of the group to be reversed
+        for (int i = 0; i < k; ++i) {
+            dq.push_back(node);
+            node = node->next;
+        }
+
+        // Reverse process using the deque
+        cur->next = dq.back();
+        dq.pop_back();
+        ListNode* last = cur->next;
+        
+        while (!dq.empty()) {
+            last->next = dq.back();
+            dq.pop_back();
+            last = last->next;
+        }
+
+        last->next = node; // Connect the reversed part with the next part of the list
+        
+        return last;
+    }
 };
