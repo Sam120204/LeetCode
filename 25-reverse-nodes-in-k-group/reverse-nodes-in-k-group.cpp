@@ -1,53 +1,38 @@
-
 class Solution {
 public:
     ListNode* reverseKGroup(ListNode* head, int k) {
-        if (!head || k == 1) return head;
+        if (head == nullptr || k == 1) return head;
 
-        ListNode dummy(0);
-        dummy.next = head;
-        ListNode* cur = &dummy;
-        
-        int count = 0;
-        ListNode* temp = head;
-        while (temp) {
-            temp = temp->next;
-            count++;
-        }
+        deque<ListNode*> dq;
+        ListNode* dummy = new ListNode(0);
+        ListNode* cur = dummy;
+        ListNode* node = head;
 
-        while (count >= k) {
-            cur = reverseNextKNodesDeque(cur, k);
-            count -= k;
-        }
-
-        return dummy.next;
-    }
-
-private:
-    // Helper function to reverse the next k nodes in the list using a deque
-    // Returns the new 'cur' pointer, pointing to the last node of the reversed group
-    ListNode* reverseNextKNodesDeque(ListNode* cur, int k) {
-        std::deque<ListNode*> dq;
-        
-        ListNode* node = cur->next; // The first node of the group to be reversed
-        for (int i = 0; i < k; ++i) {
+        while (node != nullptr) {
             dq.push_back(node);
             node = node->next;
+            if (dq.size() == k) {
+                while (!dq.empty()) {
+                    cur->next = dq.back();
+                    dq.pop_back();
+                    cur = cur->next;
+                }
+                cur->next = nullptr; // Important to avoid a cycle
+            }
         }
 
-        // Reverse process using the deque
-        cur->next = dq.back();
-        dq.pop_back();
-        ListNode* last = cur->next;
-        
-        while (!dq.empty()) {
-            last->next = dq.back();
-            dq.pop_back();
-            last = last->next;
+        // If there are nodes left in dq (less than k), append them in original order
+        if (!dq.empty()) {
+            // To maintain the original order, nodes should be appended from the front of the deque
+            while (!dq.empty()) {
+                cur->next = dq.front();
+                dq.pop_front();
+                cur = cur->next;
+            }
         }
 
-        last->next = node; // Connect the reversed part with the next part of the list
-        
-        return last;
+        ListNode* toReturn = dummy->next;
+        delete dummy; // Clean up the dummy head node
+        return toReturn;
     }
 };
