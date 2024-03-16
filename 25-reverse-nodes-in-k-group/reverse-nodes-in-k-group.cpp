@@ -8,7 +8,7 @@ public:
         ListNode* cur = dummy;
         ListNode* node = head;
 
-        while (node != nullptr) {
+        while (node) {
             dq.push_back(node);
             node = node->next;
             if (dq.size() == k) {
@@ -31,8 +31,6 @@ public:
             }
         }
 
-        ListNode* toReturn = dummy->next;
-        delete dummy; // Clean up the dummy head node
-        return toReturn;
+        return dummy->next;
     }
 };
