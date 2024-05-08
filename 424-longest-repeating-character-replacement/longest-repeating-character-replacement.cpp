@@ -45,6 +45,7 @@ public:
         int result = 0;
         
         while (j < s.size()) {
+            cout << "Current i is " << i << " and current j is " << j << endl;
             count[s[j] - 'A']++;
             maxCount = max(maxCount, count[s[j] - 'A']);
             if (j - i + 1 - maxCount > k) {
