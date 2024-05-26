@@ -6,11 +6,9 @@ public:
         sort(points.begin(), points.end(), [](vector<int>&s1, vector<int>& s2) {
             return s1[0]<s2[0];
         });
-        for (auto& i : points) {
-            cout << "{ " << i[0] << ", " << i[1] << endl;
-        }
+        
         int res = 1, cur = points[0][1];
-        //cout <<cur<< " here\n";
+
         for (int i = 1; i < points.size(); i++) {
             
             if (points[i][0] > cur) {
