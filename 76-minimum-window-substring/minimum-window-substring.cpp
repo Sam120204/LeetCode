@@ -4,13 +4,6 @@
 
 class Solution {
 public:
-    bool containsAll(const std::unordered_map<char, int>& dict, const std::unordered_map<char, int>& tracking) {
-        for (const auto& k : dict) {
-            if (tracking.at(k.first) < k.second) return false;
-        }
-        return true;
-    }
-
     string minWindow(string s, string t) {
         if (s.size() < t.size()) return ""; // If t is larger than s, no solution exists
 
