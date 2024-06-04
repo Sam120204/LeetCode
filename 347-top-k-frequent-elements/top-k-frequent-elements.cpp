@@ -1,24 +1,21 @@
 class Solution {
 public:
     vector<int> topKFrequent(vector<int>& nums, int k) {
-        unordered_map<int, int> dict;
-        for (auto& i : nums) { dict[i] += 1; }
-       
-        vector<pair<int, int>> res;
-
-        for (auto& p : dict) {
-            res.emplace_back(p);
+       unordered_map<int, int> m;
+       int max_count;
+       for (auto & i : nums) max_count = max(max_count, ++m[i]);
+       vector<vector<int>> bucket(max_count+1);
+       for (auto & i : m) {
+            bucket[i.second].push_back(i.first);
+       }
+       vector<int> res;
+       for (int i = max_count; i> -1 and res.size() < k; i--) {
+        for (const int & num : bucket[i]) {
+            res.push_back(num);
+            if (res.size() == k) break;
         }
-
-        sort(res.begin(), res.end(), [](const auto& a, const auto& b) { return a.second > b.second; } );
-        vector<int> r;
-        int i = 0;
-        while (k > 0) {
-            r.emplace_back(res[i].first);
-            k--;
-            i++;
-        }
-        return r;
+       }
+       return res;
 
     }
 };
