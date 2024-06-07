@@ -1,15 +1,29 @@
+#include <vector>
+using namespace std;
+
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
-        vector<int> bucket(3,0);
-        for (const auto & i : nums) {
-            bucket[i]++;
-        }
-        nums = {};
-        for (int i = 0; i < 3; i++) {
-            for (int j = 0; j < bucket[i];j++) {
-                nums.push_back(i);
+        int low = 0, mid = 0, high = nums.size() - 1;
+
+        while (mid <= high) {
+            if (nums[mid] == 0) {
+                swap(nums[low], nums[mid]);
+                low++;
+                mid++;
+            } else if (nums[mid] == 1) {
+                mid++;
+            } else { // nums[mid] == 2
+                swap(nums[mid], nums[high]);
+                high--;
             }
         }
+    }
+
+private:
+    void swap(int& a, int& b) {
+        int temp = a;
+        a = b;
+        b = temp;
     }
 };
