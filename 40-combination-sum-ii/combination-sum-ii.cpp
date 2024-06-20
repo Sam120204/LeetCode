@@ -1,15 +1,17 @@
 #include <vector>
 #include <algorithm>
-#include <map>
+#include <unordered_map>
+#include <unordered_set>
 
 using namespace std;
 
 class Solution {
-    void backtrack(vector<int>& candidates, int target, vector<int>& current, vector<vector<int>>& results, int& currentSum, vector<bool>& used, map<vector<bool>, int>& seen) {
+    void backtrack(vector<int>& candidates, int target, vector<int>& current, vector<vector<int>>& results, int& currentSum, vector<bool>& used, unordered_set<string>& seen) {
         if (currentSum == target) {
-            if (seen.find(used) == seen.end()) {
+            string hash = createHash(used);
+            if (seen.find(hash) == seen.end()) {
                 results.push_back(current);
-                seen[used] = 1;
+                seen.insert(hash);
             }
             return;
         }
@@ -33,6 +35,14 @@ class Solution {
         }
     }
     
+    string createHash(const vector<bool>& used) {
+        string hash;
+        for (bool b : used) {
+            hash += b ? '1' : '0';
+        }
+        return hash;
+    }
+    
 public:
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
         sort(candidates.begin(), candidates.end());
@@ -41,7 +51,7 @@ public:
         vector<int> current;
         int currentSum = 0;
         vector<bool> used(candidates.size(), false);
-        map<vector<bool>, int> seen;
+        unordered_set<string> seen;
         
         backtrack(candidates, target, current, results, currentSum, used, seen);
         
