@@ -1,60 +1,32 @@
-#include <vector>
-#include <algorithm>
-#include <unordered_map>
-#include <unordered_set>
-
-using namespace std;
-
 class Solution {
-    void backtrack(vector<int>& candidates, int target, vector<int>& current, vector<vector<int>>& results, int& currentSum, vector<bool>& used, unordered_set<string>& seen) {
-        if (currentSum == target) {
-            string hash = createHash(used);
-            if (seen.find(hash) == seen.end()) {
-                results.push_back(current);
-                seen.insert(hash);
-            }
+public:
+    vector<vector<int>> result;
+    
+    void comsum(vector<int> &curr, int target, int sum, vector<int> &candidates, int curInd, int n){
+        if(target == sum){
+            result.push_back(curr);
+            return;
+        }
+        else if(sum>target){
             return;
         }
         
-        if (currentSum > target) return;
+        for(int i = curInd; i < n; i++){
+            if(i != curInd && candidates[i]==candidates[i-1])               //to avoid picking up the same combnations i.e. we don't pick same element for certain kth position of a combination 
+                continue;
+            sum += candidates[i];
+            curr.push_back(candidates[i]);
+            comsum(curr, target, sum, candidates, i+1, n);
+            sum -= candidates[i];
+            curr.pop_back();
+        }
         
-        for (int i = 0; i < used.size(); i++) {
-            if (!used[i]) {
-                if (i > 0 && candidates[i] == candidates[i - 1] && !used[i - 1]) continue; // Skip duplicates
-                
-                used[i] = true;
-                current.push_back(candidates[i]);
-                currentSum += candidates[i];
-                
-                backtrack(candidates, target, current, results, currentSum, used, seen);
-                
-                currentSum -= candidates[i];
-                current.pop_back();
-                used[i] = false;
-            }
-        }
     }
-    
-    string createHash(const vector<bool>& used) {
-        string hash;
-        for (bool b : used) {
-            hash += b ? '1' : '0';
-        }
-        return hash;
-    }
-    
-public:
     vector<vector<int>> combinationSum2(vector<int>& candidates, int target) {
+        vector<int> curr;
+        int n = candidates.size();
         sort(candidates.begin(), candidates.end());
-        
-        vector<vector<int>> results;
-        vector<int> current;
-        int currentSum = 0;
-        vector<bool> used(candidates.size(), false);
-        unordered_set<string> seen;
-        
-        backtrack(candidates, target, current, results, currentSum, used, seen);
-        
-        return results;
+        comsum(curr, target, 0, candidates, 0, n);
+        return result;
     }
 };
