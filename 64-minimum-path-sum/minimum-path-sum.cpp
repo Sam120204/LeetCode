@@ -23,13 +23,7 @@ public:
             }
         }
         
-        // Optionally print the dp array for debugging
-        for (const auto& row : dp) {
-            for (const auto& col : row) {
-                cout << col << " ";
-            }
-            cout << endl;
-        }
+        
 
         return dp[m-1][n-1];
     }
