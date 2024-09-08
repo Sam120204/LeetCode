@@ -1,26 +1,22 @@
 class Solution {
 public:
     int findKthLargest(vector<int>& nums, int k) {
-        // Initialize an empty list
+        // initialize min-heap
         priority_queue<int, vector<int>, greater<int>> minHeap;
 
-        // Add first k elements to the list
-        for (int i = 0; i < k; i++)
+        for (int i = 0; i < k; i++) {
             minHeap.push(nums[i]);
+        }
 
-        // Loop through the remaining elements in the 'nums' array
         for (int i = k; i < nums.size(); i++) {
-            // Compare the current element with the minimum
-            // element (root) of the min-heap
+            // we need to compare current ele to the min - root of minheap
             if (nums[i] > minHeap.top()) {
-                // Remove the smallest element
+                // remove smallest ele
                 minHeap.pop();
-                // Add the current element
+                // adding current ele to the minHeap
                 minHeap.push(nums[i]);
             }
         }
-
-        // The root of the heap has the Kth largest element
         return minHeap.top();
     }
 };
