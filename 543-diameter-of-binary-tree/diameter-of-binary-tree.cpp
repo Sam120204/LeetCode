@@ -1,21 +1,20 @@
 class Solution {
+    int getdiameter(TreeNode* root, int& diameter) {
+        if (!root) return -1;  // Height of an empty subtree is -1
+        
+        int left = getdiameter(root->left, diameter);
+        int right = getdiameter(root->right, diameter);
+        
+        // Update the diameter at this node
+        diameter = max(diameter, left + right + 2);  // +2 to count edges through the root
+        
+        // Return the height of the subtree rooted at this node
+        return 1 + max(left, right);
+    }
 public:
     int diameterOfBinaryTree(TreeNode* root) {
         int diameter = 0;
-        getDepth(root, diameter);
+        getdiameter(root, diameter);
         return diameter;
-    }
-    
-    int getDepth(TreeNode* node, int& diameter) {
-        if (!node) return 0;
-        
-        int leftDepth = getDepth(node->left, diameter);
-        int rightDepth = getDepth(node->right, diameter);
-        
-        // Update the diameter at this node
-        diameter = max(diameter, leftDepth + rightDepth);
-        
-        // Return the height of the tree rooted at this node
-        return 1 + max(leftDepth, rightDepth);
     }
 };
