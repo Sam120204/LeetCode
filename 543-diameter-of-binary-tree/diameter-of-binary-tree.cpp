@@ -1,12 +1,12 @@
 class Solution {
     int getdiameter(TreeNode* root, int& diameter) {
-        if (!root) return -1;  // Height of an empty subtree is -1
+        if (!root) return 0;  // Base case: height of empty subtree is 0
         
         int left = getdiameter(root->left, diameter);
         int right = getdiameter(root->right, diameter);
         
         // Update the diameter at this node
-        diameter = max(diameter, left + right + 2);  // +2 to count edges through the root
+        diameter = max(diameter, left + right);
         
         // Return the height of the subtree rooted at this node
         return 1 + max(left, right);
