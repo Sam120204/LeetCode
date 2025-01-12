@@ -1,31 +1,28 @@
 #include <vector>
-#include <algorithm> // For using standard algorithms if needed
+#include <numeric>
+using namespace std;
 
 class Solution {
 public:
-    int candy(std::vector<int>& ratings) {
-        std::vector<int> vec(ratings.size(), 1);
-        
-        // First pass: left to right
-        for (int i = 1; i < ratings.size(); i++) {
+    int candy(vector<int>& ratings) {
+        int n = ratings.size();
+        vector<int> arr(n, 1); // Initialize all elements with 1 candy
+
+        // Left-to-right pass
+        for (int i = 1; i < n; i++) {
             if (ratings[i] > ratings[i - 1]) {
-                vec[i] = vec[i - 1] + 1;
+                arr[i] = arr[i - 1] + 1;
             }
         }
-        
-        // Second pass: right to left
-        for (int i = ratings.size() - 2; i >= 0; i--) {
+
+        // Right-to-left pass
+        for (int i = n - 2; i >= 0; i--) {
             if (ratings[i] > ratings[i + 1]) {
-                vec[i] = std::max(vec[i], vec[i + 1] + 1);
+                arr[i] = max(arr[i], arr[i + 1] + 1);
             }
         }
-        
-        // Calculate the sum
-        int sum = 0;
-        for (int i = 0; i < vec.size(); ++i) {
-            sum += vec[i];
-        }
-        
-        return sum;
+
+        // Calculate the total candies
+        return accumulate(arr.begin(), arr.end(), 0);
     }
 };
