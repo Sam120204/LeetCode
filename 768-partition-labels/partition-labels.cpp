@@ -1,26 +1,24 @@
 class Solution {
 public:
     vector<int> partitionLabels(string s) {
-        unordered_map<char, int> dict;
-        for (int i = 0; i < s.size(); i++) {
-            dict[s[i]] = i;
+        // Step 1: Create an array to store the last occurrence of each character
+        int M[256] = {0}; // Fixed size array for ASCII characters
+        for (int i = 0; i < s.size(); ++i) {
+            M[s[i]] = i; // Store the last index of character s[i]
         }
-        int end = dict[s[0]], len = 1;
-        vector<int> res = {};
-        for (int i = 0; i < s.size(); i++) {
-            if (dict[s[i]] > end) {
-                end = dict[s[i]];
-            }
-            if (i == end) {
-                res.emplace_back(len);
-                if (i+1 < s.size()) {
-                    end = dict[s[i+1]];
-                    len = 1;
-                }
-            } else {
-                len++;
+
+        // Step 2: Iterate through the string and calculate partitions
+        vector<int> partitions;
+        int start = 0, end = 0;
+
+        for (int i = 0; i < s.size(); ++i) {
+            end = max(end, M[s[i]]); // Update the current partition's end index
+            if (i == end) { // If the current index reaches the partition's end
+                partitions.push_back(end - start + 1); // Add partition size to the result
+                start = i + 1; // Start a new partition
             }
         }
-        return res;
+
+        return partitions;
     }
 };
