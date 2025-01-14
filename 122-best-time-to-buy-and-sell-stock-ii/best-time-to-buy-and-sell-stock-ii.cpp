@@ -1,14 +1,13 @@
 class Solution {
 public:
     int maxProfit(vector<int>& prices) {
-        int sum = 0;
-        int j = 1;
-        while(j<prices.size()){
-            if(prices[j] > prices[j-1]){
-                sum += prices[j] - prices[j-1];
+        int totalProfit = 0;
+        for (int i = 1; i < prices.size(); i++) {
+            // Add profit if the price increases
+            if (prices[i] > prices[i - 1]) {
+                totalProfit += prices[i] - prices[i - 1];
             }
-            j++;
         }
-        return sum;
+        return totalProfit;
     }
 };
