@@ -1,51 +1,61 @@
-#include <string>
-#include <unordered_map>
-#include <climits>
-
 class Solution {
 public:
     string minWindow(string s, string t) {
-        if (s.size() < t.size()) return ""; // If t is larger than s, no solution exists
-
-        std::unordered_map<char, int> dict;
-        std::unordered_map<char, int> tracking;
-        for (const auto& i : t) dict[i]++;
-        
-        int l = 0, r = 0, minLength = INT_MAX, minStart = 0;
-        int required = dict.size(); // Number of unique characters in t to be matched
-        int formed = 0; // Number of unique characters in the current window that match the requirement
-        
-        // Expand the right end of the window
-        while (r < s.size()) {
-            char c = s[r];
-            tracking[c]++;
-            
-            // If the current character's frequency in the window matches its frequency in t
-            if (dict.find(c) != dict.end() && tracking[c] == dict[c]) {
-                formed++;
-            }
-            
-            // Contract the window from the left as much as possible while it's valid
-            while (l <= r && formed == required) {
-                c = s[l];
-                
-                // Update the result if this window is smaller
-                if (r - l + 1 < minLength) {
-                    minLength = r - l + 1;
-                    minStart = l;
-                }
-                
-                tracking[c]--;
-                if (dict.find(c) != dict.end() && tracking[c] < dict[c]) {
-                    formed--;
-                }
-                
-                l++;
-            }
-            
-            r++;
-        }
-        
-        return minLength == INT_MAX ? "" : s.substr(minStart, minLength);
+    if (t.empty() || s.empty()) {
+        return "";
     }
+
+    // Count characters in t
+    unordered_map<char, int> t_count;
+    for (char c : t) {
+        t_count[c]++;
+    }
+
+    // Two pointers for the sliding window
+    int left = 0, right = 0;
+    int required = t_count.size(); // Number of unique characters in t
+    int formed = 0; // Number of unique characters in the current window that match t
+
+    // Track characters in the current window
+    unordered_map<char, int> window_count;
+
+    // Variables to track the minimum window
+    int min_len = INT_MAX;
+    int start_index = 0;
+
+    while (right < s.size()) {
+        // Include the current character in the window
+        char c = s[right];
+        window_count[c]++;
+
+        // If this character is in t and its count matches the required count
+        if (t_count.count(c) && window_count[c] == t_count[c]) {
+            formed++;
+        }
+
+        // Try to contract the window
+        while (left <= right && formed == required) {
+            char char_left = s[left];
+
+            // Update the minimum window
+            if (right - left + 1 < min_len) {
+                min_len = right - left + 1;
+                start_index = left;
+            }
+
+            // Remove the leftmost character from the window
+            window_count[char_left]--;
+            if (t_count.count(char_left) && window_count[char_left] < t_count[char_left]) {
+                formed--;
+            }
+
+            left++; // Shrink the window
+        }
+
+        right++; // Expand the window
+    }
+
+    // Return the minimum window substring
+    return min_len == INT_MAX ? "" : s.substr(start_index, min_len);
+}
 };
