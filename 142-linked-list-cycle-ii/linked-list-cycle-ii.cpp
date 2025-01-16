@@ -9,23 +9,47 @@
 class Solution {
 public:
     ListNode *detectCycle(ListNode *head) {
-        if (!head) return nullptr;
-        ListNode * slow = head;
-        ListNode * fast = head;
+        if (!head || !head->next) {
+            return nullptr; // No cycle if the list is empty or has only one node.
+        }
 
-        while (fast and fast->next) {
-            fast = fast->next->next;
-            slow = slow->next;
-            if (fast == slow) {
-                fast = head;
-                while (slow != fast) {
+        ListNode *slow = head;
+        ListNode *fast = head;
+
+        // Step 1: Detect if a cycle exists
+        while (fast && fast->next) {
+            slow = slow->next;            // Move slow pointer by one step
+            fast = fast->next->next;      // Move fast pointer by two steps
+
+            if (slow == fast) {           // Cycle detected
+                // Step 2: Find the cycle start
+                ListNode *entry = head;
+                while (entry != slow) {
+                    entry = entry->next;
                     slow = slow->next;
-                    fast = fast->next;
                 }
-                return slow;
+                return entry; // Cycle start node
             }
         }
-        
-        return nullptr;
+
+        return nullptr; // No cycle detected
     }
 };
+
+// Helper function to create a cycle in the linked list for testing
+void createCycle(ListNode *head, int pos) {
+    if (pos == -1) return;
+
+    ListNode *cycleNode = nullptr;
+    ListNode *tail = head;
+    int index = 0;
+
+    while (tail->next) {
+        if (index == pos) {
+            cycleNode = tail;
+        }
+        tail = tail->next;
+        index++;
+    }
+    tail->next = cycleNode; // Create the cycle
+}
