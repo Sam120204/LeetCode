@@ -1,18 +1,18 @@
 class Solution {
 public:
     int singleNonDuplicate(vector<int>& nums) {
-        int l = 0, r = nums.size()-1, res;
-        while (l <= r) {
-            int mid = l + (r-l)/2;
-            cout << "mid is " << mid << endl;
-            if (mid-1 >= 0 and nums[mid-1] == nums[mid]) {
-                if ((mid-1-l) % 2 == 1) r = mid-2;
-                else l = mid+1;
-            } else if (mid+1 < nums.size() and nums[mid+1] == nums[mid]) {
-                if ((r - mid-1) % 2 == 1) l = mid+2;
-                else r = mid-1;
-            } else { return nums[mid]; }
+        int left = 0, right = nums.size() - 1;
+        while (left < right) {
+            int mid = (left + right) / 2;
+            if (mid % 2 == 1) {
+                mid--;
+            }
+            if (nums[mid] != nums[mid + 1]) {
+                right = mid;
+            } else {
+                left = mid + 2;
+            }
         }
-        return res;
+        return nums[left];
     }
 };
