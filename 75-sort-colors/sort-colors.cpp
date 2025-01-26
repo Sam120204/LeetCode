@@ -1,29 +1,21 @@
-#include <vector>
-using namespace std;
-
 class Solution {
 public:
     void sortColors(vector<int>& nums) {
-        int low = 0, mid = 0, high = nums.size() - 1;
+        vector<int> bucket(3);
+        for (auto & i : nums) bucket[i]++;
+        int i = 0;
+        int j = 0;
 
-        while (mid <= high) {
-            if (nums[mid] == 0) {
-                swap(nums[low], nums[mid]);
-                low++;
-                mid++;
-            } else if (nums[mid] == 1) {
-                mid++;
-            } else { // nums[mid] == 2
-                swap(nums[mid], nums[high]);
-                high--;
+        while (i < 3) {
+            if (bucket[i] > 0) {
+                int m = bucket[i];
+                while (m > 0) {
+                    nums[j] = i;
+                    j++;
+                    m--;
+                }
             }
+            i++;
         }
-    }
-
-private:
-    void swap(int& a, int& b) {
-        int temp = a;
-        a = b;
-        b = temp;
     }
 };
