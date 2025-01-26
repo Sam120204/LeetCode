@@ -1,22 +1,26 @@
-#include <string>
 class Solution {
 public:
     string frequencySort(string s) {
-        unordered_map<char, int> dict;
-        int max_count;
-        for (const auto & i : s) {
-            max_count = max(max_count, ++dict[i]);
+        // Step 1: Count the frequency of each character
+        unordered_map<char, int> count;
+        for (auto& i : s) {
+            count[i]++;
         }
-        vector<vector<char>> bucket(max_count+1);
-        for (const auto & i : dict) {
-            bucket[i.second].push_back(i.first);
+
+        // Step 2: Create buckets where the index represents the frequency
+        vector<string> bucket(s.size() + 1); // Use string instead of vector<int>
+        for (const auto& ele : count) {
+            bucket[ele.second].append(ele.second, ele.first); // Add character multiple times
         }
-        string res = "";
-        for (int i = max_count; i >= 0; i--) {
-            for (auto & ele : bucket[i]) {
-                if (ele and i >= 0) res += string(i, ele);
+
+        // Step 3: Build the result string by iterating buckets in reverse order
+        string result;
+        for (int i = bucket.size() - 1; i > 0; --i) {
+            if (!bucket[i].empty()) {
+                result += bucket[i]; // Append all characters with the same frequency
             }
         }
-        return res;
+
+        return result;
     }
 };
