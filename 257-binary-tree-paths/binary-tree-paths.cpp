@@ -10,24 +10,32 @@
  * };
  */
 class Solution {
-    void addpaths(TreeNode* root, vector<string>& res, string cur_path, bool start) {
+    void dfs(TreeNode* root, vector<string>& results, vector<int> temp) {
         if (!root) return;
         
-        cur_path += start ? to_string(root->val) : "->" + to_string(root->val);
-        if (!root->left && !root->right) {
-            res.push_back(cur_path);
+        temp.push_back(root->val); // Correctly push the value
+
+        if (!root->left && !root->right) { // Leaf node case
+            string res;
+            for (int i = 0; i < temp.size(); i++) {
+                if (i != temp.size() - 1) {
+                    res += to_string(temp[i]) + "->";
+                } else {
+                    res += to_string(temp[i]);
+                }
+            }
+            results.push_back(res);
             return;
         }
         
-        addpaths(root->left, res, cur_path, false);
-        addpaths(root->right, res, cur_path, false);
+        if (root->left) dfs(root->left, results, temp);  // Pass the copied temp
+        if (root->right) dfs(root->right, results, temp); // Pass the copied temp
     }
 public:
     vector<string> binaryTreePaths(TreeNode* root) {
-        vector<string> res; 
-        if (!root) return res;
-        string cur_path = "";
-        addpaths(root, res, cur_path, true);
-        return res;
+        vector<string> results;
+        if (!root) return results;
+        dfs(root, results, {});
+        return results;
     }
 };
