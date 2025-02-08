@@ -1,46 +1,35 @@
 class Solution {
-    bool if_valid(int r, int c, int n, vector<vector<string>>& board) {
-        // Check column and both diagonals
-        for (int i = 0; i < r; i++) {
-            // Check column
-            if (board[i][c] == "Q") return false;
-            // Check top-left to bottom-right diagonal
-            if (c - (r - i) >= 0 && board[i][c - (r - i)] == "Q") return false;
-            // Check top-right to bottom-left diagonal
-            if (c + (r - i) < n && board[i][c + (r - i)] == "Q") return false;
-        }
-        return true;
-    }
-
-    void backtrack(int row, int n, vector<vector<string>>& board, vector<vector<string>>& solutions) {
-        if (row == n) {
-            vector<string> solution;
-            for (auto& row : board) {
-                string rowStr = "";
-                for (auto& cell : row) {
-                    rowStr += cell;
-                }
-                solution.push_back(rowStr);
-            }
-            solutions.push_back(solution);
-            return;
-        }
-        for (int col = 0; col < n; col++) {
-            if (board[row][col] == ".") {
-                board[row][col] = "Q";
-                if (if_valid(row, col, n, board)) {
-                    backtrack(row + 1, n, board, solutions);
-                }
-                board[row][col] = ".";
-            }
-        }
-    }
-
 public:
     vector<vector<string>> solveNQueens(int n) {
-        vector<vector<string>> board(n, vector<string>(n, "."));
-        vector<vector<string>> solutions;
-        backtrack(0, n, board, solutions);
-        return solutions;
+        vector<vector<string>> res;
+        vector<string> board(n, string(n, '.'));
+        vector<int> cols(n, 0), diag1(2 * n - 1, 0), diag2(2 * n - 1, 0);
+        
+        backtrack(0, n, board, cols, diag1, diag2, res);
+        return res;
+    }
+
+private:
+    void backtrack(int row, int n, vector<string>& board, vector<int>& cols,
+                   vector<int>& diag1, vector<int>& diag2, vector<vector<string>>& res) {
+        if (row == n) {
+            res.push_back(board);
+            return;
+        }
+
+        for (int col = 0; col < n; col++) {
+            if (cols[col] || diag1[row - col + n - 1] || diag2[row + col]) continue;
+            
+            // Place the queen
+            board[row][col] = 'Q';
+            cols[col] = diag1[row - col + n - 1] = diag2[row + col] = 1;
+
+            // Move to the next row
+            backtrack(row + 1, n, board, cols, diag1, diag2, res);
+
+            // Backtrack: Remove the queen
+            board[row][col] = '.';
+            cols[col] = diag1[row - col + n - 1] = diag2[row + col] = 0;
+        }
     }
 };
