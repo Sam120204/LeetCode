@@ -1,14 +1,3 @@
-/*
-
-    Time Complexity : O(9^(N*N)) : For every unassigned index there are 9 possible options so the worst-case time
-    complexity of sudoku solver is O(9^(N*N)).
-
-    Space Complexity : O(1), Constant space.
-
-    Solved using Matrix + Backtracking.
-
-*/
-
 class Solution {
 private:
     bool isValid(vector<vector<char>>& board, int row, int col, char ch){
