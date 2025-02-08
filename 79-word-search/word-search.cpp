@@ -1,36 +1,52 @@
 class Solution {
-    void backtrack(int r, int c, vector<vector<char>>& board, string& word, int index, bool& found, vector<vector<bool>>& is_seen) {
-        if (found || index == word.size()) {
-            found = true;
+    void dfs(vector<vector<char>>& board, int i, int j, string& word, int target_index, bool& find) {
+        if (find) return; // Stop recursion if word is already found
+        
+        if (target_index == word.size()) { // If word is found
+            find = true;
             return;
         }
-        static const vector<int> dir = {-1, 0, 1, 0, -1};
-        for (int i = 0; i < 4; i++) {
-            int new_r = r + dir[i], new_c = c + dir[i+1];
-            if (new_r >= 0 && new_r < board.size() && new_c >= 0 && new_c < board[0].size() && 
-                !is_seen[new_r][new_c] && board[new_r][new_c] == word[index]) {
-                is_seen[new_r][new_c] = true;
-                backtrack(new_r, new_c, board, word, index + 1, found, is_seen);
-                if (found) return; // Early exit if word is found
-                is_seen[new_r][new_c] = false;
-            }
+
+        // Boundary conditions + character mismatch check
+        if (i < 0 || i >= board.size() || j < 0 || j >= board[0].size() || board[i][j] != word[target_index]) {
+            return;
         }
+
+        char temp = board[i][j]; // Store original character
+        board[i][j] = '#'; // Mark cell as visited
+
+        // Prioritize searching in directions that are most likely to succeed
+        vector<vector<int>> dir = {{1,0}, {0,1}, {-1,0}, {0,-1}}; // Down, Right, Up, Left (prioritizing forward movement)
+        
+        for (auto &d : dir) {
+            dfs(board, i + d[0], j + d[1], word, target_index + 1, find);
+            if (find) return; // Stop unnecessary recursion
+        }
+
+        board[i][j] = temp; // Restore cell (Backtracking)
     }
+
 public:
     bool exist(vector<vector<char>>& board, string word) {
-        int rows = board.size();
-        if (rows == 0) return false;
-        int cols = board[0].size();
-        vector<vector<bool>> is_seen(rows, vector<bool>(cols, false));
-        bool found = false;
-        
-        for (int r = 0; r < rows; r++) {
-            for (int c = 0; c < cols; c++) {
-                if (board[r][c] == word[0]) {
-                    is_seen[r][c] = true;
-                    backtrack(r, c, board, word, 1, found, is_seen);
-                    if (found) return true;
-                    is_seen[r][c] = false;
+        int m = board.size(), n = board[0].size();
+        bool find = false;
+
+        // Early pruning: Check if board contains enough characters
+        unordered_map<char, int> board_freq, word_freq;
+        for (auto &row : board) {
+            for (char c : row) board_freq[c]++;
+        }
+        for (char c : word) word_freq[c]++;
+        for (auto [c, count] : word_freq) {
+            if (board_freq[c] < count) return false; // If board has fewer chars than needed, return early
+        }
+
+        // Start DFS from every matching first character
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == word[0]) {
+                    dfs(board, i, j, word, 0, find);
+                    if (find) return true;
                 }
             }
         }
