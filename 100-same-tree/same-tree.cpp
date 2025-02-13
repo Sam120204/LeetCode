@@ -12,9 +12,11 @@
 class Solution {
 public:
     bool isSameTree(TreeNode* p, TreeNode* q) {
-        if (!p and !q) return true;
-        if ((!p and q) or (p and !q)) return false; 
-        return isSameTree(p->left, q->left) and isSameTree(p->right, q->right) and p->val == q->val;
+        if (!p && !q) return true;
+        // One tree is empty, or the current nodes differ.
+        if (!p || !q || p->val != q->val) return false;
+        // Recursively compare left and right subtrees.
+        return isSameTree(p->left, q->left) && isSameTree(p->right, q->right);
         
     }
 };
