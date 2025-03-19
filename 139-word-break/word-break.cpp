@@ -1,17 +1,18 @@
 class Solution {
 public:
     bool wordBreak(string s, vector<string>& wordDict) {
-        vector<bool> dp(s.size()+1, false);
+        int n = s.size();
+        vector<bool> dp(n+1, false);
         dp[0] = true;
-        for (int i = 1; i < dp.size(); i++) {
-            for (const auto & word : wordDict) {
-                if (i>=word.size() and s.substr(i-word.size(), word.size()) == word) {
-
-                    dp[i] = dp[i] or dp[i-word.size()];
+        for (int i = 0; i <= n; i++) {
+            for (const auto & w : wordDict) {
+                int m = w.size();
+                if (i >= m and s.substr(i-m, m) == w) {
+                    dp[i] = dp[i-m];
                 }
+                if (dp[i]) break;
             }
         }
-        // for (auto b : dp) cout << b << " ";
-        return dp[s.size()];
+        return dp[n];
     }
 };
