@@ -9,7 +9,7 @@ public:
                 if (nums[i] > nums[j]) dp[i] = max(dp[i], dp[j]+1);
             }
         }
-        for (auto i : dp) cout << i << " ";
+
         return *max_element(dp.begin(), dp.end());
     }
 };
