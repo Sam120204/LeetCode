@@ -1,3 +1,5 @@
+import heapq
+from collections import Counter
 
 class Solution(object):
     def topKFrequent(self, nums, k):
@@ -9,6 +11,7 @@ class Solution(object):
         # Step 1: Count frequency
         freq = Counter(nums)  # O(n)
         
+        print(freq)
         # Step 2: Build a min-heap of size k
         min_heap = []  # (frequency, number)
         
