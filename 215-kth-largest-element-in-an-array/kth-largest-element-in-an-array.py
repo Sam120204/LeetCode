@@ -7,15 +7,16 @@ class Solution(object):
         :type k: int
         :rtype: int
         """
-        # Build a min-heap of the first k elements
-        heap = nums[:k]
-        heapq.heapify(heap)  # O(k)
+        # # Build a min-heap of the first k elements
+        # heap = nums[:k]
+        # heapq.heapify(heap)  # O(k)
 
-        # Process the remaining elements
-        for num in nums[k:]:
-            if num > heap[0]:  # If larger than smallest in heap
-                heapq.heappop(heap)
-                heapq.heappush(heap, num)
+        # # Process the remaining elements
+        # for num in nums[k:]:
+        #     if num > heap[0]:  # If larger than smallest in heap
+        #         heapq.heappop(heap)
+        #         heapq.heappush(heap, num)
 
-        # The root is the kth largest
-        return heap[0]
+        # # The root is the kth largest
+        # return heap[0]
+        return heapq.nlargest(k, nums)[-1]
