@@ -1,6 +1,3 @@
-import heapq
-from collections import Counter
-
 class Solution(object):
     def topKFrequent(self, nums, k):
         """
@@ -8,17 +5,21 @@ class Solution(object):
         :type k: int
         :rtype: List[int]
         """
-        # Step 1: Count frequency
-        freq = Counter(nums)  # O(n)
-        
-        print(freq)
-        # Step 2: Build a min-heap of size k
-        min_heap = []  # (frequency, number)
-        
+        # Step 1: Count frequency using dict
+        freq = {}
+        for num in nums:
+            freq[num] = freq.get(num, 0) + 1
+
+        # Step 2: Create buckets where index = frequency
+        n = len(nums)
+        buckets = [[] for _ in range(n + 1)]
         for num, count in freq.items():
-            heapq.heappush(min_heap, (count, num))  # O(log k)
-            if len(min_heap) > k:
-                heapq.heappop(min_heap)  # maintain size k
-        
-        # Step 3: Extract elements from heap
-        return [num for count, num in min_heap]
+            buckets[count].append(num)
+
+        # Step 3: Gather top k frequent elements from high to low
+        result = []
+        for i in range(n, 0, -1):
+            for num in buckets[i]:
+                result.append(num)
+                if len(result) == k:
+                    return result
