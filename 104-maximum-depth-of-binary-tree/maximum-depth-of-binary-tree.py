@@ -12,16 +12,5 @@ class Solution(object):
         """
         if not root:
             return 0
-
-        q = deque([root])
-        depth = 0
-        while q:
-            current_size = len(q)
-            for i in range(current_size):
-                node = q.popleft()
-                if node.left:
-                    q.append(node.left)
-                if node.right:
-                    q.append(node.right)
-            depth+=1
-        return depth
+        
+        return 1 + max(self.maxDepth(root.left), self.maxDepth(root.right))
