@@ -7,16 +7,20 @@ class Solution(object):
         """
         n = len(nums)
         left = 0
-        curr = 0
-        best = float('inf')  # acts like +INF
+        cur_sum = 0
+        min_len = float('inf')
 
         for right in range(n):
-            curr += nums[right]
+            cur_sum += nums[right]
 
-            # shrink from the left while we still meet/exceed target
-            while curr >= target:
-                best = min(best, right - left + 1)
-                curr -= nums[left]
+            # shrink from the left while we subarray sum >= target
+            while cur_sum >= target:
+                min_len = min(min_len, right - left + 1)
+                cur_sum -= nums[left]
                 left += 1
 
-        return 0 if best == float('inf') else best
+        if min_len == float('inf'):
+            return 0
+        else:
+            return min_len
+        
