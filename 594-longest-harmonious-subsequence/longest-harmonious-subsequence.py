@@ -4,17 +4,15 @@ class Solution(object):
         :type nums: List[int]
         :rtype: int
         """
-        nums.sort()
-        left = 0
+        count = {}
+        for i in range(len(nums)):
+            if (nums[i] in count):
+                count[nums[i]] += 1
+            else:
+                count[nums[i]] = 1
+
         best = 0
-
-        for right in range(len(nums)):
-            # shrink window until max - min <= 1
-            while nums[right] - nums[left] > 1:
-                left += 1
-
-            # record only when max - min == 1 (harmonious)
-            if nums[right] - nums[left] == 1:
-                best = max(best, right - left + 1)
-
+        for key in count:
+            if key+1 in count:
+                best = max(best, count[key] + count[key+1])
         return best
