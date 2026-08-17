@@ -1,38 +1,24 @@
-# class Solution(object):
-#     def twoSum(self, nums, target):
-#         """
-#         :type nums: List[int]
-#         :type target: int
-#         :rtype: List[int]
-#         """
-#         num_to_index = {}
-#         for i, num in enumerate(nums):
-#             complement = target - num
-#             if complement in num_to_index:
-#                 return [num_to_index[complement], i]
-#             num_to_index[num] = i
-#         return []
-class Solution(object):
-    def twoSum(self, nums, target):
-        """
-        :type nums: List[int]
-        :type target: int
-        :rtype: List[int]
-        """
-        # Keep track of original indices
-        nums_with_index = [(num, i) for i, num in enumerate(nums)]
-        # Sort based on the number values
-        nums_with_index.sort()
-
-        lo, hi = 0, len(nums_with_index) - 1
-        while lo < hi:
-            num_lo, idx_lo = nums_with_index[lo]
-            num_hi, idx_hi = nums_with_index[hi]
-            current_sum = num_lo + num_hi
-            if current_sum < target:
-                lo += 1
-            elif current_sum > target:
-                hi -= 1
+class Solution:
+    def twoSum(self, nums: List[int], target: int) -> List[int]:
+        nums_index={}
+        for i in range(len(nums)):
+            if nums[i] not in nums_index:
+                nums_index[nums[i]] = [i]
             else:
-                return [idx_lo, idx_hi]
-        return []
+                nums_index[nums[i]].append(i)
+
+        nums.sort()
+        left, right = 0, len(nums)-1
+        while left <= right:
+            if nums[left] + nums[right] == target:
+                if nums[left] == nums[right]:
+                    return [nums_index[nums[left]][0], nums_index[nums[left]][1]]
+                else:
+                    return [nums_index[nums[left]][0], nums_index[nums[right]][0]]
+            elif nums[left] + nums[right] > target:
+                right-=1
+            else: left+=1
+        return [-1,-1]
+            
+                
+        
